@@ -1,7 +1,14 @@
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 // MULTI THREADING
 // Create a class of the task you want to perform and assign that task to a thread.
 
 // (1) Print Hello World.
+
+import java.util.ArrayList;
+
 class HelloWorldPrinter extends Thread {
     @Override
     public void run() {
@@ -77,18 +84,57 @@ class SingleNumberPrinterV2 implements Runnable {
     }
 }
 
-// ADVANTAGE OF THEREADS: If there is a problem in implementing one of the threads, it won't affect the implementation of the rest of the threads. It might throw an exception where it catches the error, but the rest of the processes in the other threads continue as normal.
+// ADVANTAGE OF THREADS: If there is a problem in implementing one of the threads, it won't affect the implementation of the rest of the threads. It might throw an exception where it catches the error, but the rest of the processes in the other threads continue as normal.
 
 
-// (4) Create a student class with run method.
-class Student extends Thread {
+
+// // (4) Create a student class with run method.
+// class Student extends Thread {
+//     @Override
+//     public void run() {
+
+//     }
+// }
+
+
+
+// (5) Write a code to return a list having 2x the elements of original list and return the new list.
+//Ex : <1,2,3> --> <2,4,6>
+class ListModifier extends Thread{
+    ArrayList<Integer> nums;
+
+    public ListModifier(ArrayList<Integer> nums){
+        this.nums = nums;
+    }
+
     @Override
-    public void run() {
-
+    public void run(){
+        for(int i=0 ; i<nums.size() ; i++){
+            this.nums.set(i , nums.get(i)*2);
+        }
+        System.out.println(Thread.currentThread().getName());
     }
 }
+/* 
+Here we can get three kinds of outputs:
+CASE 1: main prints before thread modifies list
+[1, 2, 3]
+[1, 2, 3]
+Thread-0
 
-public class Main {
+CASE 2: thread finishes before main prints again
+[1, 2, 3]
+[2, 4, 6]
+Thread-0
+
+CASE 3: interleaved execution
+[1, 2, 3]
+Thread-0
+[2, 4, 6]
+*/
+
+
+public class Threads1 {
     public static void main(String[] args) {
         // // (1)
         // System.out.println("Hello World " + Thread.currentThread().getName());
@@ -114,13 +160,40 @@ public class Main {
         //     SingleNumberPrinterV1 snp = new SingleNumberPrinterV1(i);
         //     snp.start();
         // }
-        // implements Runnable
-        for(int i=1; i<=100; i++) {
-            // Thread th = new Thread(new SingleNumberPrinterV2(i));
 
-            SingleNumberPrinterV2 task = new SingleNumberPrinterV2(i);
-            Thread th = new Thread(task);
-            th.start();
-        }
+        // // implements Runnable
+        // for(int i=1; i<=100; i++) {
+        //     // Thread th = new Thread(new SingleNumberPrinterV2(i));
+
+        //     SingleNumberPrinterV2 task = new SingleNumberPrinterV2(i);
+        //     Thread th = new Thread(task);
+        //     th.start();
+        // }
+
+        // // ExecutorService
+        /*
+        Executors.newFixedThreadPool(int n): Creates a fixed number of threads (n) and the process takes place in these number of threads. Threads are reused. If all threads are busy, new tasks wait in a queue.
+
+        Executors.newCachedThreadPool(): Creates new threads as needed (unbounded pool). Reuses idle threads if available. Removes threads that are idle for 60 seconds.
+
+        Executors.newSingleThreadExecutor(): Only one thread executes tasks. Tasks are queued if a task is running. Ensures sequential execution.
+
+        Executors.newScheduledThreadPool(int corePoolSize): Creates a pool of threads that can schedule tasks. Can run task, after a fixed delay, at a fixed rate.
+        */
+        // ExecutorService es = Executors.newFixedThreadPool(10);
+        // for(int i=0 ; i<=100 ; i++){
+        //     es.submit(new SingleNumberPrinterV2(i));
+        // }
+
+
+        // (5)
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        System.out.println(list);
+        ListModifier lm = new ListModifier(list);
+        lm.start();
+        System.out.println(list);
     }
 }
