@@ -121,6 +121,16 @@ public class MergeSort {
 
 
 /*
+ OPTIMAL NUMBER OF THREADS TO CREATE FOR DIFFERENT CORE SYSTEMS:
+ 
+ For eq, if we have a 4 core system, the optimal number of threads is not only 4. This is because all the operations that are happening, its not necessary that all of them requires the CPU cores for their processes to happen. Some may also be I/O operations which are independent of CPU cores. So, in this case having more than 4 threads is more optimal, otherwise the CPU core might be ideal and we do not use the CPU to its full potential.
+ All this is decided based on the number of CPU cores and the type of application to be built.
+
+ IDEAL NUMBER OF THREAS: Double the number of cores. (Here, 8 or more)
+*/
+
+
+/*
  LOCALITY OF REFERENCE:
  Merege Sort and Quick Sort are one of the fastest sorting algorithms. 
  The memory in RAM or Disk are not read in lines, it is read in chunks. So, since array is stored in a contiguous manner in the meory, if we pick an element at index 0, it is possible that the OS has already picked the elements that are surrounding it. So, reading those elements is going to be a veryfast operation. Hence, sequential Merge Sort or Quick Sort are even more faster.
