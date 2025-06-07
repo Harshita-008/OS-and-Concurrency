@@ -10,182 +10,179 @@ import java.util.concurrent.locks.ReentrantLock;
 
 // QUESTION: We have a global variable 0. We add 1-100 to it and subtract 1-100 to it. The final output must be 0.
 
-class Value {
-    int value;
-    public Value(int value) {
-        this.value = value;
-    }
-}
+// class Value {
+//     int value;
+//     public Value(int value) {
+//         this.value = value;
+//     }
+// }
 
-// ADDER
+// // ADDER
 
-class Adder implements Callable<Void> {
-    Value val;
+// class Adder implements Callable<Void> {
+//     Value val;
 
-    public Adder(Value val) {
-        this.val = val;
-    }
+//     public Adder(Value val) {
+//         this.val = val;
+//     }
 
-    @Override
-    public Void call() {
-        for(int i=1; i<=10000; i++) {
-            this.val.value += i;
-        }
-        return null;
-    }
-}
+//     @Override
+//     public Void call() {
+//         for(int i=1; i<=10000; i++) {
+//             this.val.value += i;
+//         }
+//         return null;
+//     }
+// }
 
-class AdderWithLock implements Callable<Void> {
-    Value val;
-    Lock lock;
+// class AdderWithLock implements Callable<Void> {
+//     Value val;
+//     Lock lock;
 
-    public AdderWithLock(Value val, Lock lock) {
-        this.val = val;
-        this.lock = lock;
-    }
+//     public AdderWithLock(Value val, Lock lock) {
+//         this.val = val;
+//         this.lock = lock;
+//     }
 
-    @Override
-    public Void call() {
-        for(int i=1; i<=10000; i++) {
-            lock.lock();
-            this.val.value += i;  // Critical Section => modifies the shared data
-            lock.unlock();
-        }
-        return null;
-    }
-}
+//     @Override
+//     public Void call() {
+//         for(int i=1; i<=10000; i++) {
+//             lock.lock();
+//             this.val.value += i;  // Critical Section => modifies the shared data
+//             lock.unlock();
+//         }
+//         return null;
+//     }
+// }
 
-class AdderWithSynchronization implements Callable<Void> {
-    Value val;
+// class AdderWithSynchronization implements Callable<Void> {
+//     Value val;
 
-    public AdderWithSynchronization(Value val) {
-        this.val = val;
-    }
+//     public AdderWithSynchronization(Value val) {
+//         this.val = val;
+//     }
 
-    @Override
-    public Void call() {
-        for(int i=1; i<=10000; i++) {
-            synchronized(val) {
-                this.val.value += i;
-            }
-        }
-        return null;
-    }
-}
+//     @Override
+//     public Void call() {
+//         for(int i=1; i<=10000; i++) {
+//             synchronized(val) {
+//                 this.val.value += i;
+//             }
+//         }
+//         return null;
+//     }
+// }
 
 
-// SUBTRACTOR
+// // SUBTRACTOR
 
-class Subtractor implements Callable<Void> {
-    Value val;
+// class Subtractor implements Callable<Void> {
+//     Value val;
 
-    public Subtractor(Value val) {
-        this.val = val;
-    }
+//     public Subtractor(Value val) {
+//         this.val = val;
+//     }
 
-    @Override
-    public Void call() {
-        for(int i=1; i<=10000; i++) {
-            this.val.value -=i;
-        }
-        return null;
-    }
-}
+//     @Override
+//     public Void call() {
+//         for(int i=1; i<=10000; i++) {
+//             this.val.value -=i;
+//         }
+//         return null;
+//     }
+// }
 
-class SubtractorWithLock implements Callable<Void> {
-    Value val;
-    Lock lock;
+// class SubtractorWithLock implements Callable<Void> {
+//     Value val;
+//     Lock lock;
 
-    public SubtractorWithLock(Value val, Lock lock) {
-        this.val = val;
-        this.lock = lock;
-    }
+//     public SubtractorWithLock(Value val, Lock lock) {
+//         this.val = val;
+//         this.lock = lock;
+//     }
 
-    @Override
-    public Void call() {
-        for(int i=1; i<=10000; i++) {
-            lock.lock();
-            try {
-                val.value -= i;
-            } finally {
-                lock.unlock();
-            }
-        }
-        return null;
-    }
-}
+//     @Override
+//     public Void call() {
+//         for(int i=1; i<=10000; i++) {
+//             lock.lock();
+//             try {
+//                 val.value -= i;
+//             } finally {
+//                 lock.unlock();
+//             }
+//         }
+//         return null;
+//     }
+// }
 
-class SubtractorWithSynchronization implements Callable<Void> {
-    Value val;
+// class SubtractorWithSynchronization implements Callable<Void> {
+//     Value val;
 
-    public SubtractorWithSynchronization(Value val) {
-        this.val = val;
-    }
+//     public SubtractorWithSynchronization(Value val) {
+//         this.val = val;
+//     }
 
-    @Override
-    public Void call() {
-        for(int i=1; i<=10000; i++) {
-            synchronized(val) {
-                this.val.value -=i;
-            }
-        }
-        return null;
-    }
-}
+//     @Override
+//     public Void call() {
+//         for(int i=1; i<=10000; i++) {
+//             synchronized(val) {
+//                 this.val.value -=i;
+//             }
+//         }
+//         return null;
+//     }
+// }
 
-public class AddSubtract {
-    public static void main(String[] args) throws InterruptedException, ExecutionException {
-        // WITHOUT LOCK:
-        Value val = new Value(0);
-        Adder adderTask = new Adder(val);
-        Subtractor subtractorTask = new Subtractor(val);
+// public class AddSubtract {
+//     public static void main(String[] args) throws InterruptedException, ExecutionException {
+//         // WITHOUT LOCK:
+//         Value val = new Value(0);
+//         Adder adderTask = new Adder(val);
+//         Subtractor subtractorTask = new Subtractor(val);
 
-        ExecutorService es = Executors.newFixedThreadPool(5);
-        Future<Void> adderFuture = es.submit(adderTask);
-        Future<Void> subtractorFuture = es.submit(subtractorTask);
+//         ExecutorService es = Executors.newFixedThreadPool(5);
+//         Future<Void> adderFuture = es.submit(adderTask);
+//         Future<Void> subtractorFuture = es.submit(subtractorTask);
 
-        adderFuture.get();
-        subtractorFuture.get();
-        System.out.println("Without Lock: " + val.value);
+//         adderFuture.get();
+//         subtractorFuture.get();
+//         System.out.println("Without Lock: " + val.value);
         
         
-        // WITH LOCK:
-        // PROBLEM: Even though lock gives a lot of flexibility, everytime to get rid of synchronization problem, with this solution we need to modify the class and the constructor for any code.
-        val.value = 0;
-        Lock lock = new ReentrantLock();  // shared variable lock for both the classes => we want to keep the 2 threads in the same queue of the same lock
-        AdderWithLock adderTaskWithLock = new AdderWithLock(val, lock);
-        SubtractorWithLock subtractorTaskWithLock = new SubtractorWithLock(val, lock);
+//         // WITH LOCK:
+//         // PROBLEM: Even though lock gives a lot of flexibility, everytime to get rid of synchronization problem, with this solution we need to modify the class and the constructor for any code.
+//         val.value = 0;
+//         Lock lock = new ReentrantLock();  // shared variable lock for both the classes => we want to keep the 2 threads in the same queue of the same lock
+//         AdderWithLock adderTaskWithLock = new AdderWithLock(val, lock);
+//         SubtractorWithLock subtractorTaskWithLock = new SubtractorWithLock(val, lock);
         
-        Future<Void> adderFutureWithLock = es.submit(adderTaskWithLock);
-        Future<Void> subtractorFutureWithLock = es.submit(subtractorTaskWithLock);
+//         Future<Void> adderFutureWithLock = es.submit(adderTaskWithLock);
+//         Future<Void> subtractorFutureWithLock = es.submit(subtractorTaskWithLock);
         
-        adderFutureWithLock.get();
-        subtractorFutureWithLock.get();
-        System.out.println("With Lock: " + val.value);
+//         adderFutureWithLock.get();
+//         subtractorFutureWithLock.get();
+//         System.out.println("With Lock: " + val.value);
 
 
-        // WITH SYNCHRONIZATION:
-        val.value = 0;  
-        AdderWithSynchronization adderWithSynchronized = new AdderWithSynchronization(val);
-        SubtractorWithSynchronization subtracterWithSynchronized = new SubtractorWithSynchronization(val);
+//         // WITH SYNCHRONIZATION:
+//         val.value = 0;  
+//         AdderWithSynchronization adderWithSynchronized = new AdderWithSynchronization(val);
+//         SubtractorWithSynchronization subtracterWithSynchronized = new SubtractorWithSynchronization(val);
 
-        Future<Void> addedWithSynchronizedFuture = es.submit(adderWithSynchronized);
-        Future<Void> subtractedWithSynchronizedFuture = es.submit(subtracterWithSynchronized);
+//         Future<Void> addedWithSynchronizedFuture = es.submit(adderWithSynchronized);
+//         Future<Void> subtractedWithSynchronizedFuture = es.submit(subtracterWithSynchronized);
 
-        addedWithSynchronizedFuture.get();
-        subtractedWithSynchronizedFuture.get();
-        System.out.println("With Synchronization: " + val.value);
+//         addedWithSynchronizedFuture.get();
+//         subtractedWithSynchronizedFuture.get();
+//         System.out.println("With Synchronization: " + val.value);
         
 
-        es.shutdown();
-    }
-}
+//         es.shutdown();
+//     }
+// }
 
-/*
- JAVA IS ONE OF THE BEST PROGRAMMING LANGUAGE FOR MULTITHREADING:
- In the object of java, it provides us a way to make it threat safe. Every class in java has a superclass called Object. The Object class that is by deafult the superclass of all the objects that we create in java has it's own implicit lock in-build which can avoid this creation of lock. There are ways by which whatever is implemented using the Lock object can be implemented by the java object.
- => SYNCHRONIZED KEYWORD
-*/
+
+
 
 /*
  The single statement of incrementing or decrementing implies 3 tasks:
@@ -222,4 +219,258 @@ public class AddSubtract {
     {Critical Section Code}
     lock.unlock();
     2. using implicit lock of object class - synchronized keyword - to avoid passing a common lock object to the threads everytime.
+*/
+
+/*
+ JAVA IS ONE OF THE BEST PROGRAMMING LANGUAGE FOR MULTITHREADING:
+ In the object of java, it provides us a way to make it thread safe. Every class in java has a superclass called Object. The Object class that is by deafult the superclass of all the objects that we create in java has it's own implicit lock in-build which can avoid this creation of lock. There are ways by which whatever is implemented using the Lock object can be implemented by the java object.
+ => SYNCHRONIZED KEYWORD
+*/
+
+/*
+ LOCK: 
+ When the code runs, the threads try to acquire the locks one by one. The lock has one variable. When it is set to 0, it means we can access the critical section. When it is set to any other number other than 0, it means the critical section is nt accessible. So, when the CS is used by one thread, it sets that variable to some number other than 0 and hence other threads cannot acquire the CS at that time and get queued in a separate queue. They are polled one after the other when the CS is made accessible.
+*/
+
+/*
+ 4 PILLARS OF OOPS:
+ - Encapsulation
+ - Abstraction
+ - Inheritance
+ - Polymorphism
+
+ Here, Encapsulation is being violated.
+*/
+
+
+
+
+// Resolving Encapsulation Problem
+// synchronized => this keyword in front of the functions ensures that the specific function is being accessed by a single thread at a time.
+class Value {
+    private int data;
+    public Value(int data) {
+        this.data = data;
+    }
+
+    synchronized public int getData() {
+        return this.data;
+    }
+
+    synchronized public void setData(int d) {
+        this.data = d;
+    }
+
+    synchronized public void add(int a) {
+        this.data += a;
+    }
+
+    synchronized public void subtract(int a) {
+        this.data -= a;
+    }
+}
+
+// ADDER
+
+class Adder implements Callable<Void> {
+    Value val;
+
+    public Adder(Value val) {
+        this.val = val;
+    }
+
+    @Override
+    public Void call() {
+        for(int i=1; i<=10000; i++) {
+            this.val.add(i);
+        }
+        return null;
+    }
+}
+
+class AdderWithLock implements Callable<Void> {
+    Value val;
+    Lock lock;
+
+    public AdderWithLock(Value val, Lock lock) {
+        this.val = val;
+        this.lock = lock;
+    }
+
+    @Override
+    public Void call() {
+        for(int i=1; i<=10000; i++) {
+            lock.lock();
+            this.val.setData(this.val.getData()+i);  // Critical Section => modifies the shared data
+            lock.unlock();
+        }
+        return null;
+    }
+}
+
+class AdderWithSynchronization implements Callable<Void> {
+    Value val;
+
+    public AdderWithSynchronization(Value val) {
+        this.val = val;
+    }
+
+    @Override
+    public Void call() {
+        for(int i=1; i<=10000; i++) {
+            synchronized(val) {
+                this.val.setData(this.val.getData()+i);
+            }
+        }
+        return null;
+    }
+}
+
+
+// SUBTRACTOR
+
+class Subtractor implements Callable<Void> {
+    Value val;
+
+    public Subtractor(Value val) {
+        this.val = val;
+    }
+
+    @Override
+    public Void call() {
+        for(int i=1; i<=10000; i++) {
+            this.val.subtract(i);
+        }
+        return null;
+    }
+}
+
+class SubtractorWithLock implements Callable<Void> {
+    Value val;
+    Lock lock;
+
+    public SubtractorWithLock(Value val, Lock lock) {
+        this.val = val;
+        this.lock = lock;
+    }
+
+    @Override
+    public Void call() {
+        for(int i=1; i<=10000; i++) {
+            lock.lock();
+            try {
+                this.val.setData(this.val.getData()-i);
+            } finally {
+                lock.unlock();
+            }
+        }
+        return null;
+    }
+}
+
+class SubtractorWithSynchronization implements Callable<Void> {
+    Value val;
+
+    public SubtractorWithSynchronization(Value val) {
+        this.val = val;
+    }
+
+    @Override
+    public Void call() {
+        for(int i=1; i<=10000; i++) {
+            synchronized(val) {
+                this.val.setData(this.val.getData()-i);
+            }
+        }
+        return null;
+    }
+}
+
+public class AddSubtract {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+        // WITHOUT LOCK:
+        Value val = new Value(0);
+        Adder adderTask = new Adder(val);
+        Subtractor subtractorTask = new Subtractor(val);
+
+        ExecutorService es = Executors.newFixedThreadPool(5);
+        Future<Void> adderFuture = es.submit(adderTask);
+        Future<Void> subtractorFuture = es.submit(subtractorTask);
+
+        adderFuture.get();
+        subtractorFuture.get();
+        System.out.println("Without Lock with synchronized getter and setter: " + val.getData());
+        
+        
+        // WITH LOCK:
+        // PROBLEM: Even though lock gives a lot of flexibility, everytime to get rid of synchronization problem, with this solution we need to modify the class and the constructor for any code.
+        val.setData(0);;
+        Lock lock = new ReentrantLock();  // shared variable lock for both the classes => we want to keep the 2 threads in the same queue of the same lock
+        AdderWithLock adderTaskWithLock = new AdderWithLock(val, lock);
+        SubtractorWithLock subtractorTaskWithLock = new SubtractorWithLock(val, lock);
+        
+        Future<Void> adderFutureWithLock = es.submit(adderTaskWithLock);
+        Future<Void> subtractorFutureWithLock = es.submit(subtractorTaskWithLock);
+        
+        adderFutureWithLock.get();
+        subtractorFutureWithLock.get();
+        System.out.println("With Lock: " + val.getData());
+
+
+        // WITH SYNCHRONIZATION:
+        val.setData(0);;  
+        AdderWithSynchronization adderWithSynchronized = new AdderWithSynchronization(val);
+        SubtractorWithSynchronization subtracterWithSynchronized = new SubtractorWithSynchronization(val);
+
+        Future<Void> addedWithSynchronizedFuture = es.submit(adderWithSynchronized);
+        Future<Void> subtractedWithSynchronizedFuture = es.submit(subtracterWithSynchronized);
+
+        addedWithSynchronizedFuture.get();
+        subtractedWithSynchronizedFuture.get();
+        System.out.println("With Synchronization: " + val.getData());
+        
+
+        es.shutdown();
+    }
+}
+
+/*
+ However, the getter and setter are synchronized, even then we don't get zero. This is because we have 2 functions working at a time. The getter gets the value, increments, and might go into a pause state and then another thread of getter gets the value, increments, and goes into a pause state and later on maybe the setter is accessed and the value is set. So, the overall implementation might not be synchronized even if the getter and setter is indivitually synchronized. At a time, the getter or setter is used by a single thread, but there are multiple threads which can use the getter and setter one by one. Hence, its not in sync.
+ To resolve this, we create the synchronized add(), subtract() methods inside the Value class => ABSTRACTION
+
+ **NOTE:
+ If we have 2 different functions that are synchronized, only one can run BY A SINGLE OBJECT.
+ For 2 DIFFERENT OBJECTS, they can run together.
+
+ Eg:
+ Class A{
+    sync f1(){};
+    sync f2(){};
+    sync f3(){};
+ }
+
+ Class B {
+    sync f1(){};
+    sync f2(){};
+    sync f3(){};
+ }
+
+ A a = new A();
+ B b = new B();
+ A a2 = new A();
+
+ Only one can run at a time-
+ a.f1();
+ a.f2();
+ a.f3();
+
+ All of them can run together parallely-
+ a.f1();
+ a2.fi();
+ b.f1();
+ The lock of the object is acquired once the object starts running.
+
+
+ **FACT: Various classes in java are synchronized !!
+ -- CONCURRENT CLASSES
 */
