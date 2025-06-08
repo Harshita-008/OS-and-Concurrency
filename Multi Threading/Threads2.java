@@ -45,5 +45,9 @@ public class Threads2 {
         // es.submit() => runs in a different thread (Thread-0) which is craeted by the es
         // So, when this arraylist is being created in another thread, the main thread still runs in parallel and the execution moves to the next line. The main thraed never gets the arraylist that is returned. So, we need a promise from the thread that is created, that whatever is returned later on, we will get it in the main thraed. So, for the time being we get a token Future<>. As soon ans something is returned it gets filled inside the variable that is inside the Future<> token.
         // When we print, whenever the print line executes, its not guaranteed that the arraylist is returned. So we night not get the correct answer printed. So, we use the .get() function, which waits to execute until the output is returned from the ExecutorService.
+
+
+        // es.submit() -> returns an outpur
+        // es.execute() -> when we don't want to return anything, maybe just simply print something
     }
 }
