@@ -16,7 +16,7 @@
  Any number of producers and consumers can enter the store.
 
  Synschronization issue can arise when both producer and consumer are present inside the block at the same time.
- Producer knows that there are 2 empty spaces, but if a consumer comes at the same time and takes a product, the number of empty spaces may increase, and simiar issues vice versa.
+ Producer knows that there are 2 empty spaces, but if a consumer comes at the same time and takes a product, the number of empty spaces may increase, and similar issues vice versa.
 */
 
 import java.util.concurrent.ExecutorService;
