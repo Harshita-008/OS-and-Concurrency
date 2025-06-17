@@ -47,7 +47,7 @@ public class Threads2 {
         // When we print, whenever the print line executes, its not guaranteed that the arraylist is returned. So we night not get the correct answer printed. So, we use the .get() function, which waits to execute until the output is returned from the ExecutorService.
 
 
-        // es.submit() -> returns an outpur
+        // es.submit() -> returns an output
         // es.execute() -> when we don't want to return anything, maybe just simply print something
     }
 }

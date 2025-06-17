@@ -1,14 +1,12 @@
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.ArrayList;
 
 // MULTI THREADING
 // Create a class of the task you want to perform and assign that task to a thread.
 
 // (1) Print Hello World.
-
-import java.util.ArrayList;
-
 class HelloWorldPrinter extends Thread {
     @Override
     public void run() {
