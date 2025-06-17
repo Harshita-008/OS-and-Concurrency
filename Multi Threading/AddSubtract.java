@@ -229,7 +229,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /*
  LOCK: 
- When the code runs, the threads try to acquire the locks one by one. The lock has one variable. When it is set to 0, it means we can access the critical section. When it is set to any other number other than 0, it means the critical section is nt accessible. So, when the CS is used by one thread, it sets that variable to some number other than 0 and hence other threads cannot acquire the CS at that time and get queued in a separate queue. They are polled one after the other when the CS is made accessible.
+ When the code runs, the threads try to acquire the locks one by one. The lock has one variable. When it is set to 0, it means we can access the critical section. When it is set to any other number other than 0, it means the critical section is not accessible. So, when the CS is used by one thread, it sets that variable to some number other than 0 and hence other threads cannot acquire the CS at that time and get queued in a separate queue. They are polled one after the other when the CS is made accessible.
 */
 
 /*
